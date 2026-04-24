@@ -16,11 +16,11 @@ function App() {
       <div>
         <h1 className="text-center">_-_</h1>
           <div className="flex justify-center">
-            <ul>
+            <ul className="flex flex-col gap-4">
               {data && data.length > 0 ? (
                   data.map((asset: Asset) => (
-                      <li key={asset.id} className="flex text-lg">
-                        {asset.symbol} — {asset.profit}$ (К-сть: {asset.quantity})
+                      <li key={asset.id} className="flex text-pink-400 border-3 border-red-500  rounded-3xl ">
+                        {asset.symbol} — {asset.profit.toFixed(2)}$ (Count: {asset.quantity})
                       </li>
                   ))
                 ) : (
