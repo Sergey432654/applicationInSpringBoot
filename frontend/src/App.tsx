@@ -1,9 +1,10 @@
 import './App.css';
 
-import { useQuery } from '@tanstack/react-query';
-import { fetchAssets } from './api/Api.ts';
+import { fetchAssets, deleteAssets } from './api/Api.ts';
 import type { Asset } from './type/Asset.ts';
 import Card from './components/Card/Card.tsx';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import AddAssetForm from "./components/AddAssetForm/AddAssetForm.tsx";
 
 function App() {
   const {
@@ -17,6 +18,14 @@ function App() {
     queryKey: ['assets'],
     queryFn: fetchAssets,
   });
+  const queryClient = useQueryClient();
+  const handelDelete = async (id:number) =>{
+    await deleteAssets(id);
+    void queryClient.invalidateQueries({ queryKey: ['assets'] });
+}
+  const handleAssetAdded = () => {
+    void queryClient.invalidateQueries({ queryKey: ['assets'] });
+  };
 
   const hasAssets = assets.length > 0;
 
@@ -79,6 +88,7 @@ function App() {
               </p>
             </div>
           </section>
+          <AddAssetForm onSuccess={handleAssetAdded} />
 
           <section id="assets" aria-labelledby="assets-heading">
             <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -156,7 +166,7 @@ function App() {
             {!isLoading && !isError && hasAssets && (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {assets.map((asset) => (
-                      <Card key={asset.id} asset={asset} />
+                      <Card key={asset.id} asset={asset} onDelete={handelDelete} />
                   ))}
                 </div>
             )}

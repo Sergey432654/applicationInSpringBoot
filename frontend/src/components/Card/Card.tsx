@@ -17,6 +17,7 @@ type CryptoAsset = Asset &
 
 type CardProps = {
     asset: Asset;
+    onDelete: (id:number) => void ;
 };
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -37,7 +38,7 @@ function firstNumber(...values: Array<number | undefined>): number | null {
     return value ?? null;
 }
 
-function Card({ asset }: CardProps) {
+function Card({ asset , onDelete }: CardProps) {
     const cryptoAsset = asset as CryptoAsset;
 
     const symbol = cryptoAsset.symbol?.toUpperCase() || 'UNKNOWN';
@@ -91,6 +92,13 @@ function Card({ asset }: CardProps) {
               ? '—'
               : `${changePrefix}${percentFormatter.format(changePercent)}%`}
         </span>
+                <button
+                    type="button"
+                    onClick={() => onDelete(asset.id)}
+                    className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-slate-400 transition hover:border-red-400/40 hover:bg-red-400/10 hover:text-red-300"
+                >
+                    −
+                </button>
             </div>
 
             <div className="space-y-4">
