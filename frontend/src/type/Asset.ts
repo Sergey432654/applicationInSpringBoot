@@ -1,8 +1,9 @@
 export interface Asset{
     id: number
     symbol: string
-    quantity: number
+    cardMarket: number
     purchasePrice: number
     currentPrice: number
     profit: number
+    quantity: number
 }
