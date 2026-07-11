@@ -1,4 +1,4 @@
-
+import { Link } from 'react-router-dom';
 
 interface HeaderProps {
     isFetching: boolean;
@@ -25,15 +25,15 @@ export default function Header({isFetching, onRefresh}: HeaderProps) {
                     </a>
 
                     <nav className="hidden items-center gap-6 text-sm font-medium text-slate-300 md:flex">
-                        <a href="#assets" className="transition hover:text-white">
+                        <Link to="/" className="transition hover:text-white">
                             Assets
-                        </a>
-                        <a href="#portfolio" className="transition hover:text-white">
+                        </Link>
+                        <Link to="/portfolio" className="transition hover:text-white">
                             Portfolio
-                        </a>
-                        <a href="#markets" className="transition hover:text-white">
+                        </Link>
+                        <Link to="/markets" className="transition hover:text-white">
                             Markets
-                        </a>
+                        </Link>
                     </nav>
 
                     <button
