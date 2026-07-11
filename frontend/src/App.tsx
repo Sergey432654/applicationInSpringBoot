@@ -3,6 +3,7 @@ import './App.css';
 import { fetchAssets, deleteAssets } from './api/Api.ts';
 import type { Asset } from './type/Asset.ts';
 import Card from './components/Card/Card.tsx';
+import Header from './components/Header/Header.tsx';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import AddAssetForm from "./components/AddAssetForm/AddAssetForm.tsx";
 
@@ -31,46 +32,7 @@ function App() {
 
   return (
       <div className="min-h-screen bg-slate-950 text-slate-100">
-        <header className="sticky top-0 z-10 border-b border-white/10 bg-slate-950/90 backdrop-blur">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-            <a href="/" className="flex items-center gap-3" aria-label="Crypto Dashboard Home">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-400 text-lg font-black text-slate-950 shadow-lg shadow-cyan-400/20">
-                ₿
-              </div>
-
-              <div>
-                <p className="text-base font-bold tracking-tight text-white sm:text-lg">
-                  CryptoBoard
-                </p>
-                <p className="text-xs text-slate-400">
-                  Real-time asset overview
-                </p>
-              </div>
-            </a>
-
-            <nav className="hidden items-center gap-6 text-sm font-medium text-slate-300 md:flex">
-              <a href="#assets" className="transition hover:text-white">
-                Assets
-              </a>
-              <a href="#portfolio" className="transition hover:text-white">
-                Portfolio
-              </a>
-              <a href="#markets" className="transition hover:text-white">
-                Markets
-              </a>
-            </nav>
-
-            <button
-                type="button"
-                onClick={() => void refetch()}
-                disabled={isFetching}
-                className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isFetching ? 'Refreshing...' : 'Refresh'}
-            </button>
-          </div>
-        </header>
-
+       <Header isFetching={isFetching} onRefresh={() => void refetch()} />
         <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <section className="mb-8 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-cyan-500/15 via-slate-900 to-indigo-500/10 p-6 shadow-2xl shadow-black/20 sm:p-8">
             <div className="max-w-3xl">
