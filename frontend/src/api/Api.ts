@@ -20,3 +20,13 @@ export const deleteAssets = async (id: number) => {
     });
     if(!response.ok) throw new Error('Network error');
 }
+export const fetchPortfolioSummary = async () => {
+    const response = await fetch('http://localhost:8080/api/portfolio/summary');
+    if (!response.ok) throw new Error('Network error');
+    return await response.json();
+};
+export const fetchMarkets = async () => {
+    const response = await fetch('http://localhost:8080/api/markets');
+    if (!response.ok) throw new Error('Network error');
+    return await response.json();
+};

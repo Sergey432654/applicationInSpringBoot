@@ -29,14 +29,16 @@ public class AssetService {
         return assets;
     }
 
-    public Double getTotalPortfolioValue(List<CryptoAsset> assets) {
+    public PortfolioSummary getPortfolioSummary(List<CryptoAsset> assets) {
         double totalValue = 0.0;
+        double totalInvested = 0.0;
         for (CryptoAsset asset : assets) {
+            totalInvested += asset.getQuantity() * asset.getPurchasePrice();
             if (asset.getCurrentPrice() != null) {
                 totalValue += asset.getQuantity() * asset.getCurrentPrice();
             }
         }
-        return totalValue;
+        return new PortfolioSummary(totalValue, totalInvested, totalValue - totalInvested);
     }
 
     public void addAsset(String symbol, Double quantity, Double purchasePrice) {

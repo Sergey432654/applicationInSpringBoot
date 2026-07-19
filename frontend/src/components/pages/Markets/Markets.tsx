@@ -1,37 +1,23 @@
-import {useQuery, useQueryClient} from "@tanstack/react-query";
-import type {Asset, PortfolioSummary} from "../../../type/Asset.ts";
-import {fetchAssets, fetchPortfolioSummary} from "../../../api/Api.ts";
-import Header from "../../Header/Header.tsx";
-import AddAssetForm from "../../AddAssetForm/AddAssetForm.tsx";
-import CardMarket from "../../Card/CardMarket.tsx";
-import PortfolioStats from "./PortfolioStats.tsx";
-import PortfolioAllocation from "./PortfolioAllocation.tsx";
+import { useQuery } from '@tanstack/react-query';
+import type { MarketCoin } from '../../../type/Market.ts';
+import { fetchMarkets } from '../../../api/Api.ts';
+import Header from '../../Header/Header.tsx';
+import MarketCard from '../../Card/MarketCard.tsx';
 
-
-function Portfolio(){
+function Markets() {
     const {
-        data: assets = [],
+        data: coins = [],
         isLoading,
         isFetching,
         isError,
         error,
         refetch,
-    } = useQuery<Asset[], Error>({
-        queryKey: ['assets'],
-        queryFn: fetchAssets,
+    } = useQuery<MarketCoin[], Error>({
+        queryKey: ['markets'],
+        queryFn: fetchMarkets,
     });
-    const { data: summary } = useQuery<PortfolioSummary, Error>({
-        queryKey: ['portfolio-summary'],
-        queryFn: fetchPortfolioSummary,
-    });
-    const queryClient = useQueryClient();
 
-    const handleAssetAdded = () => {
-        void queryClient.invalidateQueries({ queryKey: ['assets'] });
-        void queryClient.invalidateQueries({ queryKey: ['portfolio-summary'] });
-    };
-
-    const hasAssets = assets.length > 0;
+    const hasCoins = coins.length > 0;
 
     return (
         <div className="min-h-screen bg-slate-950 text-slate-100">
@@ -40,38 +26,34 @@ function Portfolio(){
                 <section className="mb-8 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-cyan-500/15 via-slate-900 to-indigo-500/10 p-6 shadow-2xl shadow-black/20 sm:p-8">
                     <div className="max-w-3xl">
                         <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">
-                            Dashboard
+                            Markets
                         </p>
 
                         <h1 className="text-3xl font-black tracking-tight text-white sm:text-5xl">
-                            Track your crypto assets with confidence
+                            Top cryptocurrencies right now
                         </h1>
 
                         <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">
-                            Monitor prices, daily movements, and portfolio assets in a clean,
-                            responsive interface.
+                            Live prices and market caps for the largest coins by market cap,
+                            independent of what's in your portfolio.
                         </p>
                     </div>
                 </section>
-                <AddAssetForm onSuccess={handleAssetAdded} />
 
-                {hasAssets && summary && <PortfolioStats summary={summary} />}
-                {hasAssets && <div className="mb-8"><PortfolioAllocation assets={assets} /></div>}
-
-                <section id="assets" aria-labelledby="assets-heading">
+                <section aria-labelledby="markets-heading">
                     <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                         <div>
-                            <h2 id="assets-heading" className="text-2xl font-bold tracking-tight text-white">
-                                Assets
+                            <h2 id="markets-heading" className="text-2xl font-bold tracking-tight text-white">
+                                Top coins
                             </h2>
                             <p className="mt-1 text-sm text-slate-400">
-                                Live overview of available crypto assets.
+                                Ranked by market cap.
                             </p>
                         </div>
 
                         {!isLoading && !isError && (
                             <p className="text-sm text-slate-400">
-                                {assets.length} {assets.length === 1 ? 'asset' : 'assets'} loaded
+                                {coins.length} {coins.length === 1 ? 'coin' : 'coins'} loaded
                             </p>
                         )}
                     </div>
@@ -96,10 +78,10 @@ function Portfolio(){
                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                 <div>
                                     <h3 className="text-lg font-bold text-red-100">
-                                        Failed to load assets
+                                        Failed to load markets
                                     </h3>
                                     <p className="mt-2 text-sm leading-6 text-red-200/80">
-                                        {error?.message || 'Something went wrong while fetching crypto assets.'}
+                                        {error?.message || 'Something went wrong while fetching market data.'}
                                     </p>
                                 </div>
 
@@ -114,33 +96,17 @@ function Portfolio(){
                         </div>
                     )}
 
-                    {!isLoading && !isError && !hasAssets && (
-                        <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-8 text-center">
-                            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-2xl">
-                                ◎
-                            </div>
-
-                            <h3 className="text-xl font-bold text-white">
-                                No assets yet
-                            </h3>
-
-                            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">
-                                Your API returned an empty asset list. Add assets from the backend
-                                or connect a market data provider to populate this dashboard.
-                            </p>
-                        </div>
-                    )}
-
-                    {!isLoading && !isError && hasAssets && (
+                    {!isLoading && !isError && hasCoins && (
                         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                            {assets.map((asset) => (
-                                <CardMarket key={asset.id} asset={asset} />
+                            {coins.map((coin) => (
+                                <MarketCard key={coin.symbol} coin={coin} />
                             ))}
                         </div>
                     )}
                 </section>
             </main>
         </div>
-    )
+    );
 }
-export default Portfolio;
+
+export default Markets;

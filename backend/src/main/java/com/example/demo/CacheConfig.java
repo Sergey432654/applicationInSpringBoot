@@ -15,7 +15,7 @@ public class CacheConfig {
 
     @Bean
     public CacheManager cacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager("cryptoPrices");
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager("cryptoPrices", "marketCoins");
         cacheManager.setCaffeine(Caffeine.newBuilder()
                 .expireAfterWrite(20, TimeUnit.SECONDS)
                 .maximumSize(200));

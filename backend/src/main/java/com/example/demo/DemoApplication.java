@@ -31,6 +31,10 @@ public class DemoApplication {
 	public List<CryptoAsset> getPortfolioData() {
 		return assetService.getAllAssets();
 	}
+	@GetMapping("/portfolio/summary")
+	public PortfolioSummary getPortfolioSummary() {
+		return assetService.getPortfolioSummary(assetService.getAllAssets());
+	}
 	@DeleteMapping("/assets/{id}")
 	public void deleteAsset(@PathVariable Long id) {
 		assetService.deleteAsset(id);

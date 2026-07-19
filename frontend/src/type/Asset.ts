@@ -7,3 +7,9 @@ export interface Asset{
     profit: number
     quantity: number
 }
+
+export interface PortfolioSummary {
+    totalValue: number
+    totalInvested: number
+    totalProfit: number
+}

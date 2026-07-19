@@ -114,6 +114,18 @@ function Card({ asset }: CardProps) {
           </span>
                 </div>
 
+                {typeof cryptoAsset.profit === 'number' && Number.isFinite(cryptoAsset.profit) && (
+                    <div className="flex items-center justify-between border-t border-white/10 pt-4">
+            <span className="text-sm text-slate-400">
+              Profit / Loss
+            </span>
+
+                        <span className={`text-sm font-bold ${cryptoAsset.profit > 0 ? 'text-emerald-300' : cryptoAsset.profit < 0 ? 'text-red-300' : 'text-slate-300'}`}>
+              {cryptoAsset.profit > 0 ? '+' : ''}{currencyFormatter.format(cryptoAsset.profit)}
+            </span>
+                    </div>
+                )}
+
                 {typeof cryptoAsset.cardMarket === 'number' && Number.isFinite(cryptoAsset.cardMarket) && (
                     <div className="flex items-center justify-between border-t border-white/10 pt-4">
             <span className="text-sm text-slate-400">
