@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Crypto Portfolio Tracker</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 20px; color: #333; }
+        h1 { text-align: center; color: #2c3e50; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .form-section, .portfolio-section { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; }
+
+        form { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        input { padding: 12px; border: 1px solid #dfe6e9; border-radius: 6px; flex: 1; min-width: 150px; }
+        button { padding: 12px 25px; background-color: #27ae60; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        button:hover { background-color: #219150; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background-color: #f8f9fa; color: #636e72; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; padding: 15px; border-bottom: 2px solid #eee; }
+        td { padding: 15px; border-bottom: 1px solid #f1f1f1; vertical-align: middle; }
+
+        .summary { text-align: right; margin-bottom: 20px; padding: 15px; background: #e8f5e9; border-radius: 8px; border-left: 5px solid #27ae60; }
+        .summary h2 { margin: 0; font-size: 1.2rem; color: #2c3e50; }
+        .price-now { font-weight: bold; color: #2980b9; }
+        .btn-delete { color: #e74c3c; text-decoration: none; font-weight: bold; padding: 5px 10px; border: 1px solid #e74c3c; border-radius: 4px; transition: 0.3s; }
+        .btn-delete:hover { background: #e74c3c; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>My Crypto Portfolio</h1>
+
+    <div class="form-section">
+        <h2>Add New Asset</h2>
+        <form th:action="@{/add-asset}" method="post">
+            <input type="text" name="symbol" placeholder="Ticker (e.g. BTC)" required>
+            <input type="number" step="0.00001" name="quantity" placeholder="Quantity" required>
+            <input type="number" step="0.01" name="purchasePrice" placeholder="Purchase Price ($)" required>
+            <button type="submit">Add to Portfolio</button>
+        </form>
+    </div>
+
+    <div class="portfolio-section">
+        <div class="summary">
+            <h2>Total Portfolio Value:
+                <span th:text="${#numbers.formatDecimal(totalBalance, 1, 2)} + ' $'">0.00 $</span>
+            </h2>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Coin</th>
+                <th>Quantity</th>
+                <th>Purchase Price</th>
+                <th>Current Price</th>
+                <th>Total Invested</th>
+                <th>Total Profit</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="asset : ${assets}">
+                <td th:text="${asset.symbol}" style="font-weight: bold; color: #2c3e50;">BTC</td>
+
+                <td th:text="${asset.quantity}">0.5</td>
+
+                <td th:text="${#numbers.formatDecimal(asset.purchasePrice, 1, 2)} + ' $'">50000.00 $</td>
+
+                <td>
+                    <span class="price-now" th:if="${asset.currentPrice != null}"
+                          th:text="${#numbers.formatDecimal(asset.currentPrice, 1, 2)} + ' $'">
+                    </span>
+                    <span th:if="${asset.currentPrice == null}" style="color: #e74c3c; font-size: 0.8rem;">
+                        Not found on Binance
+                    </span>
+                </td>
+
+                <td th:text="${#numbers.formatDecimal(asset.quantity * asset.purchasePrice, 1, 2)} + ' $'">25000.00 $</td>
+                <td th:style="${asset.getProfit() >= 0 ? 'color: #27ae60; font-weight: bold;' : 'color: #e74c3c; font-weight: bold;'}">
+                    <span th:text="${#numbers.formatDecimal(asset.getProfit(), 1, 2)} + ' $'"></span>
+                </td>
+
+                <td>
+
+                    <a th:href="@{/delete/{id}(id=${asset.id})}" class="btn-delete">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${#lists.isEmpty(assets)}" style="text-align: center; margin-top: 20px; color: #95a5a6;">
+            Your portfolio is currently empty. Add your first coin!
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

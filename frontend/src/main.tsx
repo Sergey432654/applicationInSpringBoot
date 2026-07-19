@@ -13,7 +13,7 @@ createRoot(document.getElementById('root')!).render(
           <Routes>
               <Route path="/" element ={<App/>} />
               <Route path="/portfolio" element ={<Portfolio/>} />
-              <Route path="/market" element ={<App/>} />
+              <Route path="/markets" element ={<App/>} />
           </Routes>
       </BrowserRouter>
   </QueryClientProvider>,
